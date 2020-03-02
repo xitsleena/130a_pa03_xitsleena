@@ -128,6 +128,7 @@ BST::Node* BST::getPredecessorNode(int i) const{
 
 bool BST::deleteN(int i){
 	if (!contains(i)){
+		cout << "Element not found" << endl;
 		return false; 
 	}
 
@@ -138,6 +139,7 @@ bool BST::deleteN(int i){
 		if (n==root){  
 			root = NULL;
 			delete n;
+			cout << "Element deleted" << endl;
 			return true;
 		}
 		else{
@@ -149,6 +151,7 @@ bool BST::deleteN(int i){
 				par->right = NULL;
 			}
 			delete n; 
+			cout << "Element deleted" << endl;
 			return true; 
 		}
 	}
@@ -159,6 +162,7 @@ bool BST::deleteN(int i){
 			root = n->left; 
 			root->parent = NULL; 
 			delete n; 
+			cout << "Element deleted" << endl;
 			return true; 
 		}
 		Node *mom = n->parent;
@@ -170,6 +174,7 @@ bool BST::deleteN(int i){
 		}
 		n->left->parent = mom; 
 		delete n; 
+		cout << "Element deleted" << endl;
 		return true; 
 	}
 	//1 child case: only has right child
@@ -179,6 +184,7 @@ bool BST::deleteN(int i){
 			root = n->right;
 			n->right->parent = NULL;
 			delete n;
+			cout << "Element deleted" << endl;
 			return true; 
 		}
 		//otherwise, find parent, if node is left child, then set parents child to n->right, if node is right child, then set parents child to right child
@@ -192,6 +198,7 @@ bool BST::deleteN(int i){
 		//update relationship
 		n->right->parent = dad;
 		delete n;
+		cout << "Element deleted" << endl;
 		return true;
 	} 
 	//two child case
@@ -199,6 +206,7 @@ bool BST::deleteN(int i){
 	int toAdd = pre->value; 
 	deleteN(toAdd);
 	n->value = toAdd;
+	cout << "Element deleted" << endl;
 	return true; 
 }
 
@@ -211,21 +219,18 @@ void BST::print(){
 	preorder();
 	cout << "\n";
 	// in-order 
-	inorder();
+	//inorder();
 	cout << "\n";
 	// post-order 
-	postorder();
+	//postorder();
 	cout << "\n";
 }
 
 void BST::preorder(){
-	if (root == NULL){
-		return; 
-	}
 	stack<Node *> nodeTracker; 
 	nodeTracker.push(root); 
 
-	while (nodeTracker.empty() != true){
+	while (nodeTracker.empty() == false){
 		Node *add = nodeTracker.top();
 		cout << add->value << " "; 
 		nodeTracker.pop();
