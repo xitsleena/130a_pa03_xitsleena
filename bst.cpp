@@ -219,10 +219,10 @@ void BST::print(){
 	preorder();
 	cout << "\n";
 	// in-order 
-	//inorder();
+	inorder();
 	cout << "\n";
 	// post-order 
-	//postorder();
+	postorder();
 	cout << "\n";
 }
 
@@ -265,32 +265,30 @@ void BST::inorder(){
 }
 
 void BST::postorder(){
-	if (root == NULL){
-		return; 
-	}
 	stack<Node *> nodeTracker; 
-	Node *curr = root; 
-	do {
-		while(curr){
-			if(curr->right){
-				nodeTracker.push(curr->right);
-			}
-			nodeTracker.push(curr); 
-			curr = curr->left;
-		}
-		
-		nodeTracker.pop(); 
-		curr = nodeTracker.top(); 
+	stack<Node *> nodeStorage;
+    Node *curr = root; 
+    nodeTracker.push(curr);
 
-		if (curr->right && nodeTracker.top() == curr->right){
-			nodeTracker.pop();
-			nodeTracker.push(curr);
-			curr = curr->right;
-		}
-		else {
-			cout << curr->value << " ";
-		}
-	} while(nodeTracker.empty() != true);
+    while(nodeTracker.empty()!=true){
+        curr = nodeTracker.top();
+        nodeTracker.pop();
+
+        nodeStorage.push(curr);
+
+        if (curr->left){
+            nodeTracker.push(curr->left);
+        }
+        if (curr->right){
+            nodeTracker.push(curr->right);
+        }
+    }
+
+     while (nodeStorage.empty()!=true){
+         cout << nodeStorage.top()->value << " ";
+         nodeStorage.pop();
+     }
+
 
 }
 
