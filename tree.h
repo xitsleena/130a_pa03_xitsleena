@@ -2,8 +2,8 @@ class Tree{
     public:
         struct Node{
             Node(int v):value(v),height(0),left(nullptr),right(nullptr),parent(nullptr){}
-            int height;
             int value; 
+						int height;
             Node* left; 
             Node* right; 
             Node* parent;

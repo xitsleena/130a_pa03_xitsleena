@@ -1,11 +1,14 @@
-bst: bst.o 
-	g++ -std=c++11 -o bst bst.cpp 
+CXX = g++
+CXXFLAGS = -Wall -Wno-uninitialized -std=c++11
+BINARIES = bst avl
 
-bst.o: tree.h bst.cpp
-	g++ -c bst.cpp
+all: avl.out bst.out
 
-avl: avl.cpp 
-	g++ -std=c++11 -o avl avl.cpp
+avl.out: avl.cpp  
+	$(CXX) $(CXXFLAGS) $^ -o avl
+	
+bst.out: bst.cpp 
+	$(CXX) $(CXXFLAGS) $^ -o bst
 
-avl.o: tree.h avl.cpp
-	g++ -c avl.cpp
+clean:
+	/bin/rm -f $(BINARIES) *.o
