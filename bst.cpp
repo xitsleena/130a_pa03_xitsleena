@@ -248,6 +248,7 @@ void BST::printbfs(){
 			nodeTracker.push(add->right);
 		}
 	}
+	cout << "\n";
 }
 
 void BST::preorder(){

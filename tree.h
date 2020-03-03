@@ -1,8 +1,8 @@
 class Tree{
     public:
         struct Node{
-            Node(int v):value(v),depth(0),left(nullptr),right(nullptr),parent(nullptr){}
-            int depth;
+            Node(int v):value(v),height(0),left(nullptr),right(nullptr),parent(nullptr){}
+            int height;
             int value; 
             Node* left; 
             Node* right; 
@@ -12,5 +12,6 @@ class Tree{
         virtual bool access(int i) = 0; 
         virtual bool deleteN(int i) = 0;
         virtual void print() = 0;
+        virtual void printbfs() = 0;
 
 };

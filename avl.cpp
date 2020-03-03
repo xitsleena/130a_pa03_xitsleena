@@ -1,34 +1,31 @@
 #include "avl.h"
 #include <string>
 #include <stack> 
+#include <queue>
 #include <sstream>
 #include <iostream> 
 
 using namespace std; 
 
-int AVL::getDepth(int i) const{
-    return getDepthHelper(root, i);
+int AVL::getHeight(Node *n) const{
+    if (n == NULL){
+		return -1;
+	}
+	return n->height;
 }
 
-int AVL::getDepthHelper(Node* n, int i) const{
-    if (!n)
-		return 0; 
-	if (i < n->value) 
-		return 1 + getDepthHelper(n->left, i);  
-	if (i > n->value) 
-		return 1 + getDepthHelper(n->right, i);
-	
-	if(i == n->value)
-        return 0;
-    else
-        return -1;
-}
-
-int AVL::maxDepth(int l, int r){
+int AVL::maxHeight(int l, int r){
 	if (l > r){
 		return l;
 	}
 	return r;
+}
+
+int AVL::balance(Node *n){
+	if (n == NULL){
+		return 0;
+	}
+	return getHeight(n->left) - getHeight(n->right);
 }
 
 AVL::~AVL(){
@@ -66,43 +63,69 @@ AVL::Node* AVL::getNodeFor(int i, Node* n) const{
 bool AVL::insert(int i){
     if (root == NULL){
 		root = new Node(i);
-        root->depth = 0;
 		cout << "Element inserted" << endl;
 		return true;
 	}	
 
-	return insert(i, getDepth(i), root);
+	return insert(i, root);
 }
 
-bool AVL::insert(int i, int d, Node *n){
+bool AVL::insert(int i, Node *n){
 	if (i == n->value){
 		cout << "Element already present" << endl;
 		return false;
 	}
 	if (i < n->value) {
 		if (n->left){
-			return insert(i, d, n->left);
+			return insert(i, n->left);
 		}else {
 			n->left = new Node(i);
 			n->left->parent = n;
-            n->left->depth = d;
+            n->height = maxHeight(n->left->height,n->right->height) + 1;
 			cout << "Element inserted" << endl;
-			return true;
 		}
 	}
 	else {
 		if (n->right){
-			return insert(i, d, n->right);
+			return insert(i, n->right);
 		}
 		else {
 			n->right = new Node(i);
 			n->right->parent = n;
-            n->right->depth = d;
-			cout << "Element inserted" << endl;
-			return true;
+            n->height = maxHeight(n->left->height,n->right->height) + 1;
+			cout << "Element inserted" << endl;	
 		}
 	}
 
+	// check balance 
+	// does this work using n?
+	Node *inserted = getNodeFor(i,n);
+	int b = balance(inserted);
+
+	// left-left 
+	if (b > 1 && i < inserted->left->value){
+		rightRotate(inserted);
+	}
+
+	// right-right
+	if (b < -1 && i > inserted->right->value){
+		leftRotate(inserted);
+	}
+
+	// left-right
+	if (b > 1 && i > inserted->left->value){
+		inserted->left = leftRotate(inserted->left);
+		rightRotate(inserted);
+	}
+
+	// right-left 
+	if (b < -1 && i < inserted->right->value){
+		inserted->right = rightRotate(inserted->right);
+		leftRotate(inserted);
+
+	}
+
+	return true;
 }
 
 bool AVL::access(int i){
@@ -245,12 +268,11 @@ AVL::Node* AVL::rightRotate(Node *n){
 	l->right = n; 
 	n->left = lrsubtree;
 
-	// did i set up depth correctly when inserting
-	n->depth = maxDepth(n->left->depth,n->right->depth);
-	l->depth = maxDepth(l->left->depth,l->right->depth);
+	// did i set maxHeight correctly when inserting
+	n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
+	l->height = maxHeight(getHeight(l->left),getHeight(l->right)) + 1;
 
-	return l; 
-
+	return l;
 }
 
 AVL::Node* AVL::leftRotate(Node *n){
@@ -260,11 +282,11 @@ AVL::Node* AVL::leftRotate(Node *n){
 	r->right = n; 
 	n->right = rlsubtree;
 
-	// did i set up depth correctly when inserting
-	n->depth = maxDepth(n->left->depth,n->right->depth);
-	r->depth = maxDepth(r->left->depth,r->right->depth);
-
-	return r; 
+	// did i set maxHeight correctly when inserting
+	n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
+	r->height = maxHeight(getHeight(r->left),getHeight(r->right)) + 1;
+	
+	return r;
 }
 
 void AVL::print(){
@@ -349,6 +371,30 @@ void AVL::postorder(){
 
 }
 
+void AVL::printbfs(){
+	if (root == NULL){
+		cout << "Empty tree" << endl;
+		return;
+	}
+	queue<Node *> nodeTracker;
+	nodeTracker.push(root);
+
+	while (nodeTracker.empty() == false){
+		Node *add = nodeTracker.front();
+		cout << add->value << " ";
+		nodeTracker.pop();
+
+		if (add->left){
+			nodeTracker.push(add->left);
+		}
+
+		if (add->right){
+			nodeTracker.push(add->right);
+		}
+	}
+	cout << "\n";
+}
+
 int main(int arc, char* argv[]){
 
     string str = argv[1];
@@ -392,6 +438,13 @@ int main(int arc, char* argv[]){
             num = stoi(tt);
 			avl->deleteN(num);
 		    // cout << tt << endl; 
+		}
+		else if (i == "print"){
+			iss >> tt;
+			if (tt.back() == ','){
+				tt.pop_back();
+			}
+			avl->printbfs();
 		}
 		else {
 		    if (i.back() == ','){
