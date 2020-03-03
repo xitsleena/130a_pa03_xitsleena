@@ -6,3 +6,6 @@ bst.o: tree.h bst.cpp
 
 avl: avl.cpp 
 	g++ -std=c++11 -o avl.out avl.cpp
+
+avl.o: tree.h avl.cpp
+	g++ -c avl.cpp

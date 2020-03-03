@@ -1,6 +1,7 @@
 #include "bst.h"
 #include <string>
 #include <stack> 
+#include <queue>
 #include <sstream>
 #include <iostream> 
 
@@ -226,6 +227,29 @@ void BST::print(){
 	cout << "\n";
 }
 
+void BST::printbfs(){
+	if (root == NULL){
+		cout << "Empty tree" << endl;
+		return;
+	}
+	queue<Node *> nodeTracker;
+	nodeTracker.push(root);
+
+	while (nodeTracker.empty() == false){
+		Node *add = nodeTracker.front();
+		cout << add->value << " ";
+		nodeTracker.pop();
+
+		if (add->left){
+			nodeTracker.push(add->left);
+		}
+
+		if (add->right){
+			nodeTracker.push(add->right);
+		}
+	}
+}
+
 void BST::preorder(){
 	stack<Node *> nodeTracker; 
 	nodeTracker.push(root); 
@@ -335,6 +359,13 @@ int main(int arc, char* argv[]){
             num = stoi(tt);
 			bst->deleteN(num);
 		    // cout << tt << endl; 
+		}
+		else if (i == "print"){
+			iss >> tt;
+			if (tt.back() == ','){
+				tt.pop_back();
+			}
+			bst->printbfs();
 		}
 		else {
 		    if (i.back() == ','){

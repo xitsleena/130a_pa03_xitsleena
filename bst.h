@@ -7,6 +7,7 @@ class BST : public Tree{
         bool access(int i); 
         bool deleteN(int i);
         void print();
+        void printbfs();
         void clear(Node *n);
         bool contains(int i) const;
         void preorder(); 
