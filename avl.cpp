@@ -72,7 +72,7 @@ bool AVL::insert(int i){
 	}
 
 	root = insert(i, root);
-	
+
 	return true;
 
 }
@@ -105,19 +105,16 @@ AVL::Node* AVL::insert(int i, Node *n){
 
 	// left-left 
 	if (b > 1 && i < n->left->value){
-		cout << "left-left" << endl;
         return rightRotate(n);
 	}
 
 	// right-right
 	if (b < -1 && i > n->right->value){
-        cout << "right-right" << endl;
 		return leftRotate(n);
 	}
 
 	// left-right
 	if (b > 1 && i > n->left->value){
-        cout << "left-right" << endl;
 		n->left = leftRotate(n->left);
         printbfs();
 		return rightRotate(n);
@@ -125,7 +122,6 @@ AVL::Node* AVL::insert(int i, Node *n){
 
 	// right-left 
 	if (b < -1 && i < n->right->value){
-        cout << "right-left" << endl;
 		n->right = rightRotate(n->right);
 		return leftRotate(n);
 
@@ -189,83 +185,78 @@ bool AVL::deleteN(int i){
 		cout << "Element not found" << endl;
 		return false; 
 	}
+	deleteNHelper(i,root);
+	return true;
+}
 
-	Node *n = getNodeFor(i,root);
+AVL::Node* AVL::deleteNHelper(int i, Node* n){
+	if (i < n->value){
+		n->left = deleteNHelper(i,n->left);
+	}
+	else if (i > n->value){
+		n->right = deleteNHelper(i,n->right);
+	}
+	else {
+		// not two children 
+		if (n->left == NULL || n->right == NULL){
+			Node *temp = NULL;
+			if (n->left == NULL){
+				temp = n->right;
+			}
+			else if (n->right == NULL){
+				temp = n->left;
+			}
 
-	// leaf node case 
-	if (!(n->left) && !(n->right)){
-		if (n==root){  
-			root = NULL;
-			delete n;
-			cout << "Element deleted" << endl;
-			return true;
-		}
-		else{
-			Node *par = n->parent; 
-			if (par->left && par->left->value==i){
-				par->left = NULL;
+			if (temp == NULL){
+				temp = n;
+				n = NULL;
 			}
 			else{
-				par->right = NULL;
+				*n = *temp;
 			}
-			delete n; 
-			cout << "Element deleted" << endl;
-			return true; 
+			delete temp;
+		}
+		else {
+			// two children
+			Node* temp = getPredecessorNode(i);
+			n->value = temp->value;
+			n->right = deleteNHelper(temp->value, n->right);
 		}
 	}
-	// if deleted node only has left child
-	if (!(n->right)){
-		// if n is root
-		if (n == root){  
-			root = n->left; 
-			root->parent = NULL; 
-			delete n; 
-			cout << "Element deleted" << endl;
-			return true; 
-		}
-		Node *mom = n->parent;
-		if (mom->left && mom->left->value == i){
-			mom->left = n->left; // if deleted node is the left child
-		}
-		else{
-			mom->right = n->left; // if deleted node is the right child
-		}
-		n->left->parent = mom; 
-		delete n; 
-		cout << "Element deleted" << endl;
-		return true; 
-	}
-	//1 child case: only has right child
-	if (!(n->left)){ 
-		//if n is root then set root to its right child, update relations, and delete n
-		if (n==root){ 
-			root = n->right;
-			n->right->parent = NULL;
-			delete n;
-			cout << "Element deleted" << endl;
-			return true; 
-		}
-		//otherwise, find parent, if node is left child, then set parents child to n->right, if node is right child, then set parents child to right child
-		Node *dad = n->parent;
-		if (dad->left && dad->left->value == i){
-			dad->left = n->right;
-		}
-		else{
-			dad->right = n->right;
-		}
-		//update relationship
-		n->right->parent = dad;
-		delete n;
-		cout << "Element deleted" << endl;
-		return true;
-	} 
-	//two child case
-	Node *pre = getPredecessorNode(i); 
-	int toAdd = pre->value; 
-	deleteN(toAdd);
-	n->value = toAdd;
+
 	cout << "Element deleted" << endl;
-	return true; 
+	// only root 
+	if (n == NULL){
+		return n;
+	}
+
+	n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
+
+	int b = balance(n);
+
+	// left-left
+	if (b > 1 && balance(n->left) >= 0){
+		return rightRotate(n);
+	}
+
+	// right-right
+	if (b < -1 && balance(n->right) <= 0){
+		return leftRotate(n);
+	}
+
+	// left-right
+	if (b > 1 && balance(n->left) < 0){
+		n->left = leftRotate(n->left);
+		return rightRotate(n);
+	}
+
+	// right-left
+	if (b < -1 && balance(n->right) > 0){
+		n->right = rightRotate(n->right);
+		return leftRotate(n);
+	}
+
+	return n;
 }
 
 AVL::Node* AVL::rightRotate(Node *n){
@@ -275,7 +266,6 @@ AVL::Node* AVL::rightRotate(Node *n){
 	l->right = n; 
 	n->left = lrsubtree;
 
-	// did i set maxHeight correctly when inserting
 	n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
 	l->height = maxHeight(getHeight(l->left),getHeight(l->right)) + 1;
 
@@ -289,7 +279,6 @@ AVL::Node* AVL::leftRotate(Node *n){
 	r->left = n; 
 	n->right = rlsubtree;
 
-	// did i set maxHeight correctly when inserting
 	n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
 	r->height = maxHeight(getHeight(r->left),getHeight(r->right)) + 1;
 	
@@ -447,12 +436,20 @@ int main(int arc, char* argv[]){
 		    // cout << tt << endl; 
 		}
 		else if (i == "print"){
-			iss >> tt;
-			if (tt.back() == ','){
-				tt.pop_back();
-			}
-			avl->printbfs();
+		
+                iss >> tt;
+			    if (tt.back() == ','){
+				    tt.pop_back();
+			    }
+                if (tt == "bfs"){
+			        avl->printbfs();
+                 } 
+                else {
+                    avl->print();
+                }
+            
 		}
+        
 		else {
 		    if (i.back() == ','){
 		       i.pop_back();

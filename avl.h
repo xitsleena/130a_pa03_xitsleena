@@ -6,6 +6,7 @@ class AVL: public Tree {
         Node* insert(int i, Node *n);
         bool access(int i); 
         bool deleteN(int i);
+        Node* deleteNHelper(int i, Node* n);
         void print();
         void printbfs();
         void clear(Node *n);
