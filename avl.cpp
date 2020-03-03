@@ -66,8 +66,14 @@ bool AVL::insert(int i){
 		cout << "Element inserted" << endl;
 		return true;
 	}	
+	if (contains(i)){
+		cout << "Element already present" << endl;
+		return false;
+	}
 
-	return insert(i, root);
+	root = insert(i, root);
+	
+	return true;
 
 }
 
@@ -81,12 +87,13 @@ AVL::Node* AVL::insert(int i, Node *n){
 
 	if (i < n->value) {
 		n->left = insert(i, n->left);
+		n->left->parent = n;
 	}
 	else if (i > n->value){
 		n->right = insert(i, n->right);
+		n->right->parent = n;
 	}
 	else {
-		cout << "Element already present" << endl;
 		return n;
 	}
 
