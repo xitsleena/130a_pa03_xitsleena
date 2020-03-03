@@ -68,13 +68,11 @@ bool AVL::insert(int i){
 	}	
 
 	return insert(i, root);
+
 }
 
 AVL::Node* AVL::insert(int i, Node *n){
-	if (i == n->value){
-		cout << "Element already present" << endl;
-		return n;
-	}
+	
 	// inserting new node
 	if (n == NULL){
 		n = new Node(i); 
@@ -86,6 +84,10 @@ AVL::Node* AVL::insert(int i, Node *n){
 	}
 	else if (i > n->value){
 		n->right = insert(i, n->right);
+	}
+	else {
+		cout << "Element already present" << endl;
+		return n;
 	}
 
 	// fix height
