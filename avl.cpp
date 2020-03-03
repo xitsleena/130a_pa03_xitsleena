@@ -81,7 +81,7 @@ bool AVL::insert(int i, Node *n){
 		}else {
 			n->left = new Node(i);
 			n->left->parent = n;
-            n->height = maxHeight(n->left->height,n->right->height) + 1;
+            n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
 			cout << "Element inserted" << endl;
 		}
 	}
@@ -92,7 +92,7 @@ bool AVL::insert(int i, Node *n){
 		else {
 			n->right = new Node(i);
 			n->right->parent = n;
-            n->height = maxHeight(n->left->height,n->right->height) + 1;
+            n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
 			cout << "Element inserted" << endl;	
 		}
 	}
