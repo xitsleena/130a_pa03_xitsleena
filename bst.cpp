@@ -362,12 +362,20 @@ int main(int arc, char* argv[]){
 		    // cout << tt << endl; 
 		}
 		else if (i == "print"){
-			iss >> tt;
-			if (tt.back() == ','){
-				tt.pop_back();
-			}
-			bst->printbfs();
+		
+                iss >> tt;
+			    if (tt.back() == ','){
+				    tt.pop_back();
+			    }
+                if (tt == "bfs"){
+			       bst->printbfs();
+                 } 
+                else {
+                    bst->print();
+                }
+            
 		}
+        
 		else {
 		    if (i.back() == ','){
 		       i.pop_back();
@@ -378,6 +386,7 @@ int main(int arc, char* argv[]){
             }
 		   // cout << i << endl;
 		}
+        
 		
 	}
 
