@@ -75,29 +75,22 @@ AVL::Node* AVL::insert(int i, Node *n){
 		cout << "Element already present" << endl;
 		return n;
 	}
-	if (i < n->value) {
-		if (n->left){
-			return insert(i, n->left);
-		}
-		else {
-			n->left = new Node(i);
-			n->left->parent = n;
-            n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
-			cout << "Element inserted" << endl;
-		}
-	}
-	else {
-		if (n->right){
-			return insert(i, n->right);
-		}
-		else {
-			n->right = new Node(i);
-			n->right->parent = n;
-            n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
-			cout << "Element inserted" << endl;	
-		}
+	// inserting new node
+	if (n == NULL){
+		n = new Node(i); 
+		cout << "Element inserted" << endl; 
 	}
 
+	if (i < n->value) {
+		n->left = insert(i, n->left);
+	}
+	else if (i > n->value){
+		n->right = insert(i, n->right);
+	}
+
+	// fix height
+    n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
+			
 	// check balance 
 	int b = balance(n);
 
@@ -124,6 +117,7 @@ AVL::Node* AVL::insert(int i, Node *n){
 
 	}
 
+	// if balanced 
 	return n;
 }
 
