@@ -105,22 +105,27 @@ AVL::Node* AVL::insert(int i, Node *n){
 
 	// left-left 
 	if (b > 1 && i < n->left->value){
-		return rightRotate(n);
+		cout << "left-left" << endl;
+        return rightRotate(n);
 	}
 
 	// right-right
 	if (b < -1 && i > n->right->value){
+        cout << "right-right" << endl;
 		return leftRotate(n);
 	}
 
 	// left-right
 	if (b > 1 && i > n->left->value){
+        cout << "left-right" << endl;
 		n->left = leftRotate(n->left);
+        printbfs();
 		return rightRotate(n);
 	}
 
 	// right-left 
 	if (b < -1 && i < n->right->value){
+        cout << "right-left" << endl;
 		n->right = rightRotate(n->right);
 		return leftRotate(n);
 
@@ -281,7 +286,7 @@ AVL::Node* AVL::leftRotate(Node *n){
 	Node *r = n->right; 
 	Node *rlsubtree = r->right; 
 
-	r->right = n; 
+	r->left = n; 
 	n->right = rlsubtree;
 
 	// did i set maxHeight correctly when inserting
@@ -313,7 +318,7 @@ void AVL::preorder(){
 
 	while (nodeTracker.empty() == false){
 		Node *add = nodeTracker.top();
-		cout << add->value << " "; 
+		cout << add->value << " " << "h(" << add->height << ") ";
 		nodeTracker.pop();
 
 		if (add->right){
@@ -338,7 +343,7 @@ void AVL::inorder(){
 		curr = nodeTracker.top();
 		nodeTracker.pop(); 
 
-		cout << curr->value << " "; 
+		cout << curr->value << " h(" << curr->height << ") ";
 
 		curr = curr->right;
 	}
@@ -366,7 +371,7 @@ void AVL::postorder(){
     }
 
      while (nodeStorage.empty()!=true){
-         cout << nodeStorage.top()->value << " ";
+         cout << nodeStorage.top()->value << " h(" << nodeStorage.top()->height << ") ";
          nodeStorage.pop();
      }
 
@@ -383,7 +388,7 @@ void AVL::printbfs(){
 
 	while (nodeTracker.empty() == false){
 		Node *add = nodeTracker.front();
-		cout << add->value << " ";
+		cout << add->value << " h(" << add->height << ") ";
 		nodeTracker.pop();
 
 		if (add->left){
