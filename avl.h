@@ -3,7 +3,7 @@ class AVL: public Tree {
     public:
         ~AVL();
         bool insert(int i);
-        bool insert(int i, Node *n);
+        Node* insert(int i, Node *n);
         bool access(int i); 
         bool deleteN(int i);
         void print();

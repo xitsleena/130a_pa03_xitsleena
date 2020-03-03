@@ -70,15 +70,16 @@ bool AVL::insert(int i){
 	return insert(i, root);
 }
 
-bool AVL::insert(int i, Node *n){
+AVL::Node* AVL::insert(int i, Node *n){
 	if (i == n->value){
 		cout << "Element already present" << endl;
-		return false;
+		return n;
 	}
 	if (i < n->value) {
 		if (n->left){
 			return insert(i, n->left);
-		}else {
+		}
+		else {
 			n->left = new Node(i);
 			n->left->parent = n;
             n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
@@ -98,34 +99,32 @@ bool AVL::insert(int i, Node *n){
 	}
 
 	// check balance 
-	// does this work using n?
-	Node *inserted = getNodeFor(i,n);
-	int b = balance(inserted);
+	int b = balance(n);
 
 	// left-left 
-	if (b > 1 && i < inserted->left->value){
-		rightRotate(inserted);
+	if (b > 1 && i < n->left->value){
+		return rightRotate(n);
 	}
 
 	// right-right
-	if (b < -1 && i > inserted->right->value){
-		leftRotate(inserted);
+	if (b < -1 && i > n->right->value){
+		return leftRotate(n);
 	}
 
 	// left-right
-	if (b > 1 && i > inserted->left->value){
-		inserted->left = leftRotate(inserted->left);
-		rightRotate(inserted);
+	if (b > 1 && i > n->left->value){
+		n->left = leftRotate(n->left);
+		return rightRotate(n);
 	}
 
 	// right-left 
-	if (b < -1 && i < inserted->right->value){
-		inserted->right = rightRotate(inserted->right);
-		leftRotate(inserted);
+	if (b < -1 && i < n->right->value){
+		n->right = rightRotate(n->right);
+		return leftRotate(n);
 
 	}
 
-	return true;
+	return n;
 }
 
 bool AVL::access(int i){
