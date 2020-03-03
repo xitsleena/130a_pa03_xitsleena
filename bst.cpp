@@ -8,7 +8,7 @@
 using namespace std; 
 
 BST::~BST(){
-	clear(root);
+	clear(root); 
 }
 
 void BST::clear(Node *n){
@@ -327,7 +327,7 @@ int main(int arc, char* argv[]){
 
     int num; 
 
-	BST *bst = new BST();
+	BST bst = BST();
 
     while(iss >> i){
 		
@@ -338,7 +338,7 @@ int main(int arc, char* argv[]){
 		       tt.pop_back();
 		    }
             num = stoi(tt);
-            bst->insert(num);
+            bst.insert(num);
 		    // cout << tt << endl; 
 		}
 		else if (i == "access"){
@@ -348,7 +348,7 @@ int main(int arc, char* argv[]){
 		       tt.pop_back();
 		    }
             num = stoi(tt);
-            bst->access(num);
+            bst.access(num);
 		    // cout << tt << endl; 
 		}
 		else if (i == "delete") {
@@ -358,37 +358,29 @@ int main(int arc, char* argv[]){
 		       tt.pop_back();
 		    }
             num = stoi(tt);
-			bst->deleteN(num);
+			bst.deleteN(num);
 		    // cout << tt << endl; 
 		}
 		else if (i == "print"){
+             if (i.back() == ',' || i.back() =='t'){
+                i.pop_back();
+                bst.print();
+             }
+             else{
 		
                 iss >> tt;
 			    if (tt.back() == ','){
 				    tt.pop_back();
 			    }
                 if (tt == "bfs"){
-			       bst->printbfs();
+			       bst.printbfs();
                  } 
-                else {
-                    bst->print();
-                }
+             }
             
 		}
-        
-		else {
-		    if (i.back() == ','){
-		       i.pop_back();
-		    }
-           
-            if (i == "print"){
-                bst->print();
-            }
-		   // cout << i << endl;
-		}
-        
+       } 
 		
-	}
+
 
     return 0; 
 

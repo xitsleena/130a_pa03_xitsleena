@@ -185,8 +185,11 @@ bool AVL::deleteN(int i){
 		cout << "Element not found" << endl;
 		return false; 
 	}
-	deleteNHelper(i,root);
-	return true;
+	
+    deleteNHelper(i,root);
+	
+    cout << "Element deleted" << endl;
+    return true;
 }
 
 AVL::Node* AVL::deleteNHelper(int i, Node* n){
@@ -224,7 +227,6 @@ AVL::Node* AVL::deleteNHelper(int i, Node* n){
 		}
 	}
 
-	cout << "Element deleted" << endl;
 	// only root 
 	if (n == NULL){
 		return n;
@@ -307,7 +309,7 @@ void AVL::preorder(){
 
 	while (nodeTracker.empty() == false){
 		Node *add = nodeTracker.top();
-		cout << add->value << " " << "h(" << add->height << ") ";
+		cout << add->value << " ";
 		nodeTracker.pop();
 
 		if (add->right){
@@ -332,7 +334,7 @@ void AVL::inorder(){
 		curr = nodeTracker.top();
 		nodeTracker.pop(); 
 
-		cout << curr->value << " h(" << curr->height << ") ";
+		cout << curr->value << " ";
 
 		curr = curr->right;
 	}
@@ -360,7 +362,7 @@ void AVL::postorder(){
     }
 
      while (nodeStorage.empty()!=true){
-         cout << nodeStorage.top()->value << " h(" << nodeStorage.top()->height << ") ";
+         cout << nodeStorage.top()->value << " ";
          nodeStorage.pop();
      }
 
@@ -377,7 +379,7 @@ void AVL::printbfs(){
 
 	while (nodeTracker.empty() == false){
 		Node *add = nodeTracker.front();
-		cout << add->value << " h(" << add->height << ") ";
+		cout << add->value << " ";
 		nodeTracker.pop();
 
 		if (add->left){
@@ -401,7 +403,7 @@ int main(int arc, char* argv[]){
 
     int num; 
 
-	AVL *avl = new AVL();
+	AVL avl = AVL();
 
     while(iss >> i){
 		
@@ -412,7 +414,7 @@ int main(int arc, char* argv[]){
 		       tt.pop_back();
 		    }
             num = stoi(tt);
-            avl->insert(num);
+            avl.insert(num);
 		    // cout << tt << endl; 
 		}
 		else if (i == "access"){
@@ -422,7 +424,7 @@ int main(int arc, char* argv[]){
 		       tt.pop_back();
 		    }
             num = stoi(tt);
-            avl->access(num);
+            avl.access(num);
 		    // cout << tt << endl; 
 		}
 		else if (i == "delete") {
@@ -432,7 +434,7 @@ int main(int arc, char* argv[]){
 		       tt.pop_back();
 		    }
             num = stoi(tt);
-			avl->deleteN(num);
+			avl.deleteN(num);
 		    // cout << tt << endl; 
 		}
 		else if (i == "print"){
@@ -442,10 +444,10 @@ int main(int arc, char* argv[]){
 				    tt.pop_back();
 			    }
                 if (tt == "bfs"){
-			        avl->printbfs();
+			        avl.printbfs();
                  } 
                 else {
-                    avl->print();
+                    avl.print();
                 }
             
 		}
@@ -456,7 +458,7 @@ int main(int arc, char* argv[]){
 		    }
            
             if (i == "print"){
-                avl->print();
+                avl.print();
             }
 		   // cout << i << endl;
 		}
