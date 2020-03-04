@@ -72,7 +72,7 @@ bool AVL::insert(int i){
 	}
 
 	root = insert(i, root);
-	//printbfs();
+	printbfs();
 	return true;
 
 }
@@ -105,27 +105,27 @@ AVL::Node* AVL::insert(int i, Node *n){
 
 	// left-left 
 	if (b > 1 && i < n->left->value){
-//		cout << "ll" << endl;
+		cout << "ll" << endl;
 		return rightRotate(n);
 	}
 
 	// right-right
 	if (b < -1 && i > n->right->value){
-	//	cout << "rr" << endl;
+		cout << "rr" << endl;
 //		printbfs();
 		return leftRotate(n);
 	}
 
 	// left-right
 	if (b > 1 && i > n->left->value){
-//		cout << "lr" << endl;
+		cout << "lr" << endl;
 		n->left = leftRotate(n->left);
 		return rightRotate(n);
 	}
 
 	// right-left 
 	if (b < -1 && i < n->right->value){
-	//	cout << "rl" << endl;
+		cout << "rl" << endl;
 		n->right = rightRotate(n->right);
 		return leftRotate(n);
 
@@ -197,10 +197,6 @@ bool AVL::deleteN(int i){
 }
 
 AVL::Node* AVL::deleteNHelper(int i, Node* n){
-	if (n == NULL){
-		return n;
-	}
-
 	if (i < n->value){
 		n->left = deleteNHelper(i,n->left);
 	}
@@ -225,7 +221,7 @@ AVL::Node* AVL::deleteNHelper(int i, Node* n){
 			else{
 				*n = *temp;
 			}
-			free(temp);
+			delete temp;
 		}
 		else {
 			// two children
@@ -239,7 +235,7 @@ AVL::Node* AVL::deleteNHelper(int i, Node* n){
 	if (n == NULL){
 		return n;
 	}
-	//cout << "do i reach after deletion" << endl;
+
 	n->height = maxHeight(getHeight(n->left),getHeight(n->right)) + 1;
 
 	int b = balance(n);
@@ -269,8 +265,7 @@ AVL::Node* AVL::deleteNHelper(int i, Node* n){
 		n->right = rightRotate(n->right);
 		return leftRotate(n);
 	}
-	
-//	cout << "reach after balancing" << endl;
+
 	return n;
 }
 
