@@ -24,5 +24,5 @@ class AVL: public Tree {
     private:
         Node* root; 
         Node* getNodeFor(int i, Node* n) const; 
-        Node* getPredecessorNode(int i) const;
+        Node* getSuccessorNode(int i);
 };

@@ -154,29 +154,29 @@ bool AVL::access(int i){
 	return false;
 }
 
-AVL::Node* AVL::getPredecessorNode(int i) const{
+AVL::Node* AVL::getSuccessorNode(int i){
 	if (!contains(i)){
 		return NULL; // node for value does not exist
 	}
 
-	Node* min = root; 
-	while (min && min->left){
-		min = min->left; // check if value at min 
+	Node* max = root; 
+	while (max && max->right){
+		max = max->right; // check if value at min 
 	}
-	if (min->value == i){
+	if (max->value == i){
 		return NULL; // a predecessor will not exist at min
 	} 
 	Node* n = getNodeFor(i, root); 
-	if (n->left){
-		n = n->left; // if left subtree exists, find right-most child
-		while(n && n->right){
-			n = n->right;
+	if (n->right){
+		n = n->right; // if right subtree exists, find left-most child
+		while(n && n->left){
+			n = n->left;
 		}
 		return n; 
 	}
-	n = n->parent; // look for smaller value from parent 
+	n = n->parent; // look for larger value from parent 
 	while (n && n->parent){ 
-		if (n->value < i){
+		if (n->value > i){
 			return n; 
 		}
 		n = n->parent;
@@ -225,11 +225,12 @@ AVL::Node* AVL::deleteNHelper(int i, Node* n){
 			else{
 				*n = *temp;
 			}
-			free(temp);
+			delete temp;
 		}
 		else {
 			// two children
-			Node* temp = getPredecessorNode(i);
+			Node* temp = getSuccessorNode(i);
+			//cout << temp->value << endl; 
 			n->value = temp->value;
 			n->right = deleteNHelper(temp->value, n->right);
 		}
@@ -246,26 +247,22 @@ AVL::Node* AVL::deleteNHelper(int i, Node* n){
 
 	// left-left
 	if (b > 1 && balance(n->left) >= 0){
-		//cout << "ll" << endl;
 		return rightRotate(n);
 	}
 
 	// right-right
 	if (b < -1 && balance(n->right) <= 0){
-//		cout << "rl" << endl;
 		return leftRotate(n);
 	}
 
 	// left-right
 	if (b > 1 && balance(n->left) < 0){
-	//	cout << "lr" << endl;
 		n->left = leftRotate(n->left);
 		return rightRotate(n);
 	}
 
 	// right-left
 	if (b < -1 && balance(n->right) > 0){
-		//cout << "rl" << endl;
 		n->right = rightRotate(n->right);
 		return leftRotate(n);
 	}
